@@ -1,0 +1,52 @@
+{
+  "name": "mresult",
+  "version": "0.0.4",
+  "description": "Typescript implementation of Result type",
+  "keywords": [
+    "Result",
+    "Ok",
+    "Err",
+    "Typescript"
+  ],
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "clean": "rm -rf lib",
+    "build": "tsc -p .",
+    "watch": "tsc -w -p .",
+    "test": "jest",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run clean && npm test",
+    "version": "git add -A",
+    "postversion": "git push && git push --tags"
+  },
+  "author": "Simon Leigh",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ButteryCrumpet/mresult.git"
+  },
+  "devDependencies": {
+    "@types/jest": "^23.3.10",
+    "jest": "^23.6.0",
+    "ts-jest": "^23.10.5",
+    "typescript": "^3.2.2"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ],
+    "roots": [
+      "./tests"
+    ]
+  }
+}
