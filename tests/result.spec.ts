@@ -35,4 +35,10 @@ describe("result", () => {
     expect(tryAndSucceed(failure)).toEqual(failure)
   })
 
+  test("Result.withDefault", () => {
+    const defaulter = Result.withDefault("default")
+    expect(defaulter(Result.Ok("not default"))).toBe("not default")
+    expect(defaulter(Result.Err("error"))).toBe("default")
+  })
+
 })
