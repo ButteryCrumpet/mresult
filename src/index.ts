@@ -93,3 +93,19 @@ export const andThen: andThen
 type withDefault = <T, E>(def: T) => (result: Result<T, E>) => T
 export const withDefault: withDefault
   = d => r => isOk(r) ? r[1] : d
+
+
+/**
+ * Unwrap an Ok<T> returning the value contained inside the Result
+ */
+type value = <T>(ok: Ok<T>) => T
+export const value: value
+  = ok => ok[1]
+
+
+/**
+ * Unwrap an Err<T> returning the value contained inside the Result
+ */
+type message = <T>(err: Err<T>) => T
+export const message: message
+  = e => e[1]

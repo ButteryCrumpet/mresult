@@ -83,10 +83,47 @@ type andThen = (fn: (x: T) => Result<U, S>) => (r: Result<T, E>) => Result<U, S>
 ```
 
 If `r` is `Err` it will return an `Err<E>` else it will pass the value inside \
-`r` to `fn` and return `Result<U,S>` (either `Ok<U>` or `Err<S>`)
+`r` to the function `fn` and return a `Result<U,S>` (either `Ok<U>` or `Err<S>`)
 
 ### Example
 
 ```typescript
-const 
+import { andThen } from Result
+
+const parseNumber = (str: string) => {
+    const n = parseInt(str, 10)
+    return !isNaN(n)
+        ? Ok(n)
+        : Err("String to number parse error")
+
+}
+
+const validateMonthNum = (n: number) => {
+    return n <= 12 && n >= 1
+        ? Ok(n)
+        : Err("Number must be between 1 and 12")
+}
+
+const month = andThen(validateMonth)(parseNumber(5)) // Ok(5)
+const parseError = andThen(validateMonth)(parseNumber("error")) // Err("String to number parse error")
+const validationError = andThen(validateMonth)(parseNumber(20)) // Err("Number must be between 1 and 12")
+
 ```
+
+## value and message
+
+As Typescript/ECMAScript does not have pattern matching two helper functions are \
+available. One to extract the value from an `Ok` and one to extract the message from \
+an `Err`.
+
+```typescript
+
+const value = Result.value(Result.Ok("value")) // "value"
+
+const message = Result.value(Result.Err("message")) // "message"
+
+```
+
+Please note that if not using Typescript and therefore able to pass an `Ok` to \
+`Result.message` or an `Err` to `Result.value` there is possibility for weirdness. \
+As such in this case only use these helper functions after checking `isOk` or `isErr`
