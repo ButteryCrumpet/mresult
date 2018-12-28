@@ -2,24 +2,31 @@ import * as Result from "../src/index"
 
 describe("Result", () => {
 
-  test("Result.Ok", () => {
-    expect(Result.isOk(Result.Ok("value"))).toBe(true)
-    expect(Result.isErr(Result.Ok("value"))).toBe(false)
-  })
+  describe(".match", () => {
 
-  test("Result.Err", () => {
-    expect(Result.isErr(Result.Err("message"))).toBe(true)
-    expect(Result.isOk(Result.Err("message"))).toBe(false)
+    const match = Result.match({
+      Ok: (n: number) => `The number is ${n}`,
+      Err: (m: string) => `An error occurred: ${m}`
+    })
+
+    test("matches on Ok", () => {
+      expect(match(Result.Ok(5))).toBe("The number is 5")
+    })
+
+    test("matches on Err", () => {
+      expect(match(Result.Err("oh dear"))).toBe("An error occurred: oh dear")
+    })
+
   })
 
   describe(".map", () => {
     const doubleOk = Result.map((n: number) => n * 2)
 
-    test("if Ok<T> maps to an Ok<U>", () => {
+    test("if Ok<T>; maps to an Ok<U>", () => {
       expect(doubleOk(Result.Ok(2))).toEqual(Result.Ok(4))
     })
 
-    test("if Err returns an equal Err", () => {
+    test("if Err; returns an equal Err", () => {
       expect(doubleOk(Result.Err(2))).toEqual(Result.Err(2))
     })
   })
@@ -27,11 +34,11 @@ describe("Result", () => {
   describe(".mapErr", () => {
     const appendMessage = Result.mapErr((m: string[]) => [...m, "error2"])
 
-    test("if Err<T> maps to an Err<U>", () => {
+    test("if Err<T>; maps to an Err<U>", () => {
       expect(appendMessage(Result.Err(["error1"]))).toEqual(Result.Err(["error1", "error2"]))
     })
 
-    test("if Ok returns an equal Ok", () => {
+    test("if Ok; returns an equal Ok", () => {
       expect(appendMessage(Result.Ok(1))).toEqual(Result.Ok(1))      
     })
   })
@@ -60,22 +67,36 @@ describe("Result", () => {
   describe(".withDefault", () => {
     const defaulter = Result.withDefault("default")
 
-    test("if Ok<T> returns T", () => {
+    test("if Ok<T>; returns T", () => {
       expect(defaulter(Result.Ok("not default"))).toBe("not default")
     })
 
-    test("if Err returns default", () => {
+    test("if Err; returns default", () => {
       expect(defaulter(Result.Err("error"))).toBe("default")
     })
   })
   
-
-  test("Result.value", () => {
-    expect(Result.value(Result.Ok("value"))).toBe("value")
+  describe("Extractor helper functions", () => {
+    test("Result.value", () => {
+      expect(Result.value(Result.Ok("value"))).toBe("value")
+    })
+  
+    test("Result.message", () => {
+      expect(Result.message(Result.Err("message"))).toBe("message")
+    })
   })
 
-  test("Result.message", () => {
-    expect(Result.message(Result.Err("message"))).toBe("message")
+  describe("Type checks", () => {
+
+    test(".isOk", () => {
+      expect(Result.isOk(Result.Ok("value"))).toBe(true)
+      expect(Result.isErr(Result.Ok("value"))).toBe(false)
+    })
+  
+    test(".isErr", () => {
+      expect(Result.isErr(Result.Err("message"))).toBe(true)
+      expect(Result.isOk(Result.Err("message"))).toBe(false)
+    })
   })
 
 })

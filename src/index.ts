@@ -60,12 +60,22 @@ export const isErr = <T, E>(result: Result<T, E>): result is Err<E> => result[0]
 
 
 /**
+ * A composable way of switching on Ok and Err. 
+ * Emulates pattern matching (case, match, etc)
+ */
+type match = <T, E, U>(cases: {Ok: (v: T) => U, Err: (m: E) => U})
+  => (result: Result<T, E>)
+  => U
+export const match: match
+  = cases => result => isOk(result) ? cases.Ok(value(result)) : cases.Err(message(result))
+
+/**
  * Maps Result<T, E> to a Result<U, E> using passed in function
  * returns Err<E> if passed result is an Err
  */
 type map = <U, T, E>(fn: (val: T) => U) => (result: Result<T, E>) => Result<U, E>
 export const map: map
-  = fn => result => isOk(result) ? Ok(fn(result[1])) : result
+  = fn => result => isOk(result) ? Ok(fn(value(result))) : result
  
   
 /**
@@ -74,7 +84,7 @@ export const map: map
  */
 type mapErr = <U, T, E>(fn: (val: E) => U) => (result: Result<T, E>) => Result<T, U>
 export const mapErr: mapErr
-  = fn => result => isErr(result) ? Err(fn(result[1])) : result
+  = fn => result => isErr(result) ? Err(fn(message(result))) : result
 
 
 /**
@@ -83,7 +93,7 @@ export const mapErr: mapErr
  */
 type andThen = <U, T, E>(fn: (val: T) => Result<U, E>) => (result: Result<T, E>) => Result<U, E>
 export const andThen: andThen
-  = fn => result => isOk(result) ? fn(result[1]) : result
+  = fn => result => isOk(result) ? fn(value(result)) : result
 
 
 /**
@@ -92,7 +102,7 @@ export const andThen: andThen
  */
 type withDefault = <T, E>(def: T) => (result: Result<T, E>) => T
 export const withDefault: withDefault
-  = d => r => isOk(r) ? r[1] : d
+  = def => result => isOk(result) ? value(result) : def
 
 
 /**

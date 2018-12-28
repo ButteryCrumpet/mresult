@@ -23,7 +23,9 @@ const err: Err<string> = Result.Err("error")
 
 ```
 
-Helper functions are available to determine if a result is an Ok or an Err.
+Helper functions are available to determine if a result is an Ok or an Err. As well \
+as the match function to give a more fluent, composable way of switching on an Err or \
+Ok.
 
 ```typescript
 
@@ -34,6 +36,17 @@ if (Result.isOk(ok)) {
 if (Result.isErr(err)) {
     // do something
 }
+
+const output = match({
+    Ok: (n: number) => `The number is: ${n}`,
+    Err: (m: string) => `An error occured with message: "${m}"`
+})(result)
+// Result === OK(5) -> output === "The number is 5"
+// Result === Err("oh dear") -> output === "An error occured with message: "oh dear""
+
+// Return types on both Ok and Err cases must be the same
+// Declaring the type the parameters for each case is recommended to avoid odd
+// Typescript errors
 
 ```
 
