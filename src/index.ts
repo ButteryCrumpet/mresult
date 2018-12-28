@@ -5,7 +5,7 @@
  * Use to manage errors and other points of failure
  * in the program
  * 
- * @module MResult
+ * @module Result
  * @author Simon Leigh
 */
 

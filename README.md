@@ -37,7 +37,7 @@ if (Result.isErr(err)) {
     // do something
 }
 
-const output = match({
+const output = Result.match({
     Ok: (n: number) => `The number is: ${n}`,
     Err: (m: string) => `An error occured with message: "${m}"`
 })(result)
