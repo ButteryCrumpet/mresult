@@ -1,6 +1,6 @@
 {
   "name": "result-te",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Typescript implementation of Result type",
   "keywords": [
     "Result",
